@@ -1,6 +1,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<termios.h>//mac 전용. 윈도우는 conio.h 쓰세요
+#include<string.h>
 
 int getch(void) //mac 전용 
 { int ch; 
@@ -56,27 +57,39 @@ void GetSubject(char* *szName, int *nGrade, int nSemester)//과목이름 점수�
 {
     int  i;
     double tmp=0;
+
+
     FILE *fp = NULL;
     for(i=0; i<6; i++){
         fflush(stdin);
+
         printf("과목 명을 입력하세요.(6과목) : \n  ");
-        scanf("%s", &(*szName)[i]);
+        char buffer[30];
+        scanf("%s", buffer);
+        int l = strlen(buffer);
+        char* newstrptr = (char*)malloc(sizeof(char) * (l + 1));
+        strcpy(newstrptr, buffer);
+        szName[i] = newstrptr;
         fflush(stdin);
+
         printf("점수를 입력하세요.(정수) : \n  ");
         scanf("%d", &nGrade[i]);
-
     }
+    printf("0000");
     for(i=0; i<6; i++){
         tmp=tmp+nGrade[i];
     }
     tmp=tmp/6;
-    
+    printf("1111");
+
     if(nSemester == 11){
         fp = fopen("1학년 1학기.txt","w");
+        printf("2222");
         for(i=0; i<6; i++)
             fprintf(fp, "%s\n%d\n%lf", szName[i], nGrade[i], tmp);
+        printf("3333");
     }
-        else if(nSemester == 12){
+    else if(nSemester == 12){
         fp = fopen("1학년 2학기.tx","w");
         for(i=0; i<6; i++)
             fprintf(fp, "%s\n%d\n%lf", szName[i], nGrade[i], tmp);
@@ -88,62 +101,63 @@ void GetSubject(char* *szName, int *nGrade, int nSemester)//과목이름 점수�
 
 
 
-    int main(void)
+int main(void)
+{
+    int nMenu = 0, nAge=0, nSemester=0;
+    int nGrade[6];
+    char *szName[6];
+
+    while ((nMenu = PrintMenu()) != 4)
     {
-        int nMenu = 0, nAge=0, nSemester=0;
-        int nGrade[]={0};
-        char *szName[]={0};
-        
-        while ((nMenu = PrintMenu()) != 4)
+        switch (nMenu)
         {
-            switch (nMenu)
-            {
-                case 1:{
-                           nAge=GetAge();
+            case 1:{
+                       nAge=GetAge();
 
-                           switch (nAge){
-                               case 1:
-                                   nSemester=GetSemester();
-                                   GetSubject(szName, nGrade, nAge*10+nSemester);
-                                   break;
+                       switch (nAge){
+                           case 1:
+                               nSemester=GetSemester();
+                               GetSubject(szName, nGrade, nAge*10+nSemester);
+                               break;
 
-                               case 2:
-                                   nSemester=GetSemester();
-                                   break;
+                           case 2:
+                               nSemester=GetSemester();
+                               break;
 
-                               case 3:
-                                   nSemester=GetSemester();
-                                   break;
+                           case 3:
+                               nSemester=GetSemester();
+                               break;
 
-                               case 4:
-                                   nSemester=GetSemester();
-                                   break;
+                           case 4:
+                               nSemester=GetSemester();
+                               break;
 
-                               default:
-                                   puts(" 1~4 사이의 숫자를 입력하세요");
-                                   continue;
+                           default:
+                               puts(" 1~4 사이의 숫자를 입력하세요");
+                               continue;
 
-                           }
                        }
+                   }
 
 
-                       break;
+                   break;
 
-                case 2:
-                       puts("성적평점");
-                       break;
+            case 2:
+                   puts("성적평점");
+                   break;
 
-                case 3:
-                       puts("학점별 기업목록");
-                       break;
+            case 3:
+                   puts("학점별 기업목록");
+                   break;
 
-                default: //???
-                       puts("\n\n\n   1~4 사이의 수를 입력하세요 ");
+            default: //???
+                   puts("\n\n\n   1~4 사이의 수를 입력하세요 ");
 
 
-            }
-            getch();
         }
-        return 0;
+        getch();
     }
+    return 0;
+}
+
 
