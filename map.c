@@ -68,7 +68,7 @@ void GetSubject(char* *szName, int *nGrade, int nSemester)//과목이름 점수�
     }
     for(i=0; i<6; i++){
         tmp=tmp+nGrade[i];
-    }
+ a   }
     tmp=tmp/6;
     
     if(nSemester == 11){
